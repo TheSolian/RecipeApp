@@ -1,4 +1,6 @@
+import { AntDesign } from '@expo/vector-icons'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
   DarkTheme,
   DefaultTheme,
@@ -7,7 +9,8 @@ import {
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { useEffect } from 'react'
-import { useColorScheme } from 'react-native'
+import { Pressable, useColorScheme } from 'react-native'
+import { loadData, recipes } from '../lib/db'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -27,6 +30,10 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   })
+
+  useEffect(() => {
+    loadData()
+  }, [])
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -53,7 +60,12 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-        <Stack.Screen name='modal' options={{ presentation: 'modal' }} />
+        <Stack.Screen
+          name='[recipe]'
+          options={{
+            title: 'Recipe',
+          }}
+        />
       </Stack>
     </ThemeProvider>
   )
